@@ -66,23 +66,23 @@ build:
 	zip lambda.zip index.py data.json template.html
 
 deploy:
-	aws sts get-caller-identity
+	local/bin/aws sts get-caller-identity
 
-	aws lambda wait function-active \
+	local/bin/aws lambda wait function-active \
 		--function-name="$(FUNCTION)"
 
-	aws lambda update-function-configuration \
+	local/bin/aws lambda update-function-configuration \
 		--function-name="$(FUNCTION)" \
 		--environment "Variables={PLATFORM=$(PLATFORM),VERSION=$(VERSION),BUILD_NUMBER=$(BUILD_NUMBER),ENVIRONMENT=$(ENVIRONMENT)}"
 
-	aws lambda wait function-updated \
+	local/bin/aws lambda wait function-updated \
 		--function-name="$(FUNCTION)"
 
-	aws lambda update-function-code \
+	local/bin/aws lambda update-function-code \
 		--function-name="$(FUNCTION)" \
 	 	--zip-file=fileb://lambda.zip
 
-	aws lambda wait function-updated \
+	local/bin/aws lambda wait function-updated \
 		--function-name="$(FUNCTION)"
 
 testdeployment:
